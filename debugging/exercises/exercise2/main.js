@@ -1,7 +1,7 @@
 const addButtons = document.querySelectorAll(".add-button");
 const formContainer = document.getElementById("form-container");
 const tableBody = document.getElementById("table-body");
-const submitted = document.getElementById("submitted");
+// const submitted = document.getElementById("submitted");
 
 let bookNumber = 0;
 let myLibrary = [];
@@ -19,7 +19,7 @@ const book2 = {
   read: "No",
 };
 
-myLibrary.push(book1;
+myLibrary.push(book1);
 myLibrary.push(book2);
 
 render();
@@ -28,15 +28,15 @@ addButtons.forEach((button) => {
   button.addEventListener("click", () => {
     formContainer.style.display = "block";
   });
-};
+});
 
 function addDeleteButtons() {
   let deleteButtons = document.querySelectorAll(".delete");
 
   deleteButtons.forEach((button) => {
-    if (button.getAttribute("data-book") == bookNumber) {
+    if (parseInt(button.getAttribute("data-book")) === bookNumber) {
       //Only add eventListeners to new books
-      button.addEventListener("clicksss", () => {
+      button.addEventListener("click", () => {
         deleteBook(button.getAttribute("data-book"));
       });
     }
@@ -47,7 +47,7 @@ function addReadButtons() {
   let readButtons = document.querySelectorAll(".change-read");
 
   readButtons.forEach((button) => {
-    if (button.getAttribute("data-book") == bookNumber) {
+    if (parseInt(button.getAttribute("data-book")) === bookNumber) {
       button.addEventListener("click", () => {
         changeReadStatus(button.getAttribute("data-book"), button);
       });
@@ -93,7 +93,7 @@ function render() {
 
       let titleCell = document.createElement("td");
       titleCell.append(myLibrary[i].title);
-      row.append(titleCella);
+      row.append(titleCell);
 
       let authorCell = document.createElement("td");
       authorCell.append(myLibrary[i].author);
@@ -120,7 +120,7 @@ function render() {
       row.append(readCell);
 
       let deleteCell = document.createElement("td");
-      let deleteB = document.createElement("button");
+      let deleteButton = document.createElement("button");
       let icon = document.createElement("ion-icon");
       icon.setAttribute("name", "trash-outline");
       deleteButton.classList.add("delete");
@@ -133,7 +133,7 @@ function render() {
 
       tableBody.insertBefore(row, tableBody.firstChild);
 
-      addDeletedButtons();
+      addDeleteButtons();
       addReadButtons();
 
       bookNumber++;
@@ -147,16 +147,32 @@ document.getElementById("submit").addEventListener("click", (e) => {
   let form = document.querySelector("form");
   let bookArgs = [];
 
-  for (let element of form.elements) {
-    if (element.id === "read") {
-      element.checked ? bookArgs.push("No") : bookArgs.push("Yes");
-      element.checked = false;
-    } else {
-      bookArgs.push(element.value);
-      if (element.id !== "submit") {
-        element.value = "";
+  /* 
+  Trying to complete adding without any error. 
+  If user doesn't fill Title, Author or Pages will give an error 
+  and it won't be submitted. D
+  */
+  try {
+    for (let element of form.elements) {
+      if (element.value === "")
+        throw `${element.name[0]
+          .toUpperCase()
+          .concat(element.name.slice(1))} is empty. Please fill it!`;
+      if (element.id === "read") {
+        !element.checked ? bookArgs.push("No") : bookArgs.push("Yes");
+        element.checked = false;
+      } else {
+        bookArgs.push(element.value);
+        if (element.id !== "submit") {
+          element.value = "";
+        }
       }
     }
+  } catch (err) {
+    window.onerror = function () {
+      alert(err);
+    };
+    throw err;
   }
 
   formContainer.style.display = "none";
