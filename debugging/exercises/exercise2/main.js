@@ -176,6 +176,6 @@ document.getElementById("submit").addEventListener("click", (e) => {
   }
 
   formContainer.style.display = "none";
-  addBookToLibrary(bookArgs[1], bookArgs[0], bookArgs[2], bookArgs[3]);
+  addBookToLibrary(bookArgs[0], bookArgs[1], bookArgs[2], bookArgs[3]);
   render();
 });
